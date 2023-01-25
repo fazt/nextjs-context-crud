@@ -1,3 +1,4 @@
+"use client";
 import { createContext, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
 
@@ -34,5 +35,7 @@ export const TasksProvider = ({ children }) => {
 };
 
 export const useTasks = () => {
-  return useContext(TaskContext);
+  const context = useContext(TaskContext);
+  if (!context) throw new Error("useTasks must be used within a TasksProvider");
+  return context;
 };
