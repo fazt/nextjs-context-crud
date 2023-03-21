@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 
 const TaskContext = createContext();
@@ -11,7 +11,15 @@ export const useTasks = () => {
 };
 
 export const TasksProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
+  // save in localStorage
+  const [tasks, setTasks] = useState(() => {
+    const localData = window.localStorage.getItem("tasks");
+    return localData ? JSON.parse(localData) : [];
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const createTask = (title, description) =>
     setTasks([...tasks, { id: uuid(), title, description }]);

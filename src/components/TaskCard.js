@@ -4,12 +4,12 @@ import { VscTrash } from "react-icons/vsc";
 
 export const TaskCard = ({ task }) => {
   const { deleteTask } = useTasks();
-  const { router } = useRouter();
+  const router = useRouter();
 
   return (
     <div
       className="bg-gray-700 hover:bg-gray-600 cursor-pointer px-20 py-5 m-2 flex justify-between"
-      onClick={() => router.push("/edit/" + task.id)}
+      onClick={() => router.push(`/edit/${task.id}`)}
     >
       <div>
         <div className="flex justify-between">
