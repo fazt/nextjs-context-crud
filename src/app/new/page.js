@@ -3,12 +3,14 @@ import { useEffect } from "react";
 import { useTasks } from "../../context/TasksContext";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 const TaskFormPage = ({ params }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty, isValid },
+    formState: { errors },
+    setValue,
   } = useForm();
   const { createTask, updateTask, tasks } = useTasks();
   const router = useRouter();
@@ -16,8 +18,10 @@ const TaskFormPage = ({ params }) => {
   const onSubmit = handleSubmit((data) => {
     if (!params.id) {
       createTask(data.title, data.description);
+      toast.success("Task created successfully");
     } else {
       updateTask(params.id, data);
+      toast.success("Task updated successfully");
     }
     router.push("/");
   });
@@ -25,10 +29,12 @@ const TaskFormPage = ({ params }) => {
   useEffect(() => {
     if (params.id) {
       const taskFound = tasks.find((task) => task.id === params.id);
-      if (taskFound)
-        setTask({ title: taskFound.title, description: taskFound.description });
+      if (taskFound) {
+        setValue("title", taskFound.title);
+        setValue("description", taskFound.description);
+      }
     }
-  }, [params.id, tasks]);
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-full">
@@ -44,7 +50,11 @@ const TaskFormPage = ({ params }) => {
           name="title"
           {...register("title", { required: true })}
         />
-        {errors.title && <span className="block text-red-400 mb-2">This field is required</span>}
+        {errors.title && (
+          <span className="block text-red-400 mb-2">
+            This field is required
+          </span>
+        )}
 
         <textarea
           cols="2"
@@ -53,11 +63,13 @@ const TaskFormPage = ({ params }) => {
           name="description"
           {...register("description", { required: true })}
         />
-        {errors.description && <span className="block text-red-400 mb-2">This field is required</span>}
+        {errors.description && (
+          <span className="block text-red-400 mb-2">
+            This field is required
+          </span>
+        )}
 
-        <button
-          className="bg-green-500 hover:bg-green-400 px-4 py-2 rounded-sm disabled:opacity-30"
-        >
+        <button className="bg-green-500 hover:bg-green-400 px-4 py-2 rounded-sm disabled:opacity-30">
           Save
         </button>
       </form>

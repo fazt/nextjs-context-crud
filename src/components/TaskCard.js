@@ -1,6 +1,7 @@
 import { useTasks } from "../context/TasksContext";
 import { useRouter } from "next/navigation";
 import { VscTrash } from "react-icons/vsc";
+import { toast } from "react-hot-toast";
 
 export const TaskCard = ({ task }) => {
   const { deleteTask } = useTasks();
@@ -22,6 +23,7 @@ export const TaskCard = ({ task }) => {
                 "Are you sure you want to delete this task?"
               );
               if (accept) deleteTask(task.id);
+              toast.success("Task deleted successfully");
             }}
           >
             <VscTrash className="mr-2" /> Delete
