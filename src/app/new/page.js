@@ -1,33 +1,26 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTasks } from "../../context/TasksContext";
 import { useRouter } from "next/navigation";
-
-const inititalState = {
-  title: "",
-  description: "",
-};
+import { useForm } from "react-hook-form";
 
 const TaskFormPage = ({ params }) => {
-  const [task, setTask] = useState(inititalState);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty, isValid },
+  } = useForm();
   const { createTask, updateTask, tasks } = useTasks();
   const router = useRouter();
 
-  const handleChange = (e) =>
-    setTask({ ...task, [e.target.name]: e.target.value });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const onSubmit = handleSubmit((data) => {
     if (!params.id) {
-    createTask(task.title, task.description);
-    setTask(inititalState);
+      createTask(data.title, data.description);
     } else {
-      updateTask(params.id, task);
+      updateTask(params.id, data);
     }
-
     router.push("/");
-  };
+  });
 
   useEffect(() => {
     if (params.id) {
@@ -35,36 +28,35 @@ const TaskFormPage = ({ params }) => {
       if (taskFound)
         setTask({ title: taskFound.title, description: taskFound.description });
     }
-    console.log("params.id", params.id);
   }, [params.id, tasks]);
 
   return (
     <div className="flex justify-center items-center h-full">
-      <form className="bg-gray-700 p-10 h-2/4" onSubmit={handleSubmit}>
-        <h1 className="text-3xl mb-7">
+      <form className="bg-gray-700 p-10" onSubmit={onSubmit}>
+        <h1 className="text-3xl mb-3">
           {params.id ? "Edit Task" : "New Task"}
         </h1>
         <input
           type="text"
-          className="bg-gray-800 focus:text-gray-100 focus:outline-none w-full py-3 px-4 mb-5"
+          className="bg-gray-800 focus:text-gray-100 focus:outline-none w-full py-3 px-4 mb-2 block"
           placeholder="Write a title"
           autoFocus
           name="title"
-          onChange={handleChange}
-          value={task.title}
+          {...register("title", { required: true })}
         />
+        {errors.title && <span className="block text-red-400 mb-2">This field is required</span>}
+
         <textarea
           cols="2"
           placeholder="Write a Description"
-          className="bg-gray-800 focus:text-gray-100 focus:outline-none w-full py-3 px-4 mb-5"
+          className="bg-gray-800 focus:text-gray-100 focus:outline-none w-full py-3 px-4 mb-1 block"
           name="description"
-          onChange={handleChange}
-          value={task.description}
-        ></textarea>
+          {...register("description", { required: true })}
+        />
+        {errors.description && <span className="block text-red-400 mb-2">This field is required</span>}
 
         <button
           className="bg-green-500 hover:bg-green-400 px-4 py-2 rounded-sm disabled:opacity-30"
-          disabled={!task.title}
         >
           Save
         </button>
