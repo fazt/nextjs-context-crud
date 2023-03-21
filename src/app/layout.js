@@ -1,5 +1,6 @@
+import "./globals.css";
 import { Layout } from "../components/Layout";
-import Navbar from "../components/Navbar";
+import { Navbar } from "../components/Navbar";
 import { TasksProvider } from "../context/TasksContext";
 
 export default function RootLayout({ children }) {

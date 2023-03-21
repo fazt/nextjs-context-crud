@@ -1,14 +1,11 @@
 "use client";
 
-import React from "react";
 import { useTasks } from "../context/TasksContext";
-import { useRouter } from "next/navigation";
-import { VscTrash, VscTasklist } from "react-icons/vsc";
-import { TaskCard } from '../components/TaskCard';
+import { VscTasklist } from "react-icons/vsc";
+import { TaskCard } from "../components/TaskCard";
 
 function Home() {
-  const { tasks, deleteTask } = useTasks();
-  const router = useRouter();
+  const { tasks } = useTasks();
 
   return (
     <div className="flex justify-center">
@@ -20,7 +17,7 @@ function Home() {
       ) : (
         <div className="w-7/10">
           {tasks.map((task, i) => (
-           <TaskCard task={task} key={i} />
+            <TaskCard task={task} key={i} />
           ))}
         </div>
       )}

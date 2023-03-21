@@ -5,13 +5,14 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { useTasks } from "../context/TasksContext";
 
-function Navbar() {
+export function Navbar() {
   const router = useRouter();
   const { tasks } = useTasks();
+
   return (
-    <header className="flex items-center bg-gray-800 px-28 py-5">
+    <header className="flex items-center bg-gray-800 px-28 py-3">
       <Link href="/">
-        <h1 className="font-black text-lg">Task App</h1>
+        <h1 className="font-black text-3xl text-white">Task App</h1>
       </Link>
 
       <span className="ml-2 text-gray-400 font-bold">{tasks.length} tasks</span>
@@ -28,5 +29,3 @@ function Navbar() {
     </header>
   );
 }
-
-export default Navbar;
